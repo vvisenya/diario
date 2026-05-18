@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>// DIÁRIO_</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0e0e;
+  --bg2: #161616;
+  --bg3: #1e1e1e;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #e8e8e2;
+  --muted: #666;
+  --muted2: #999;
+  --accent: #e8e8e2;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 52px;
+}
+.nav-logo { font-size: 11px; letter-spacing: 3px; color: var(--muted2); }
+.nav-tabs { display: flex; gap: 0; }
+.nav-tab {
+  padding: 0 1.25rem; height: 52px;
+  display: flex; align-items: center;
+  font-size: 11px; letter-spacing: 2px;
+  color: var(--muted);
+  cursor: pointer; border: none; background: none;
+  font-family: var(--mono);
+  border-left: 0.5px solid var(--border);
+  transition: color 0.15s, background 0.15s;
+  text-transform: uppercase;
+}
+.nav-tab:last-child { border-right: 0.5px solid var(--border); }
+.nav-tab:hover { color: var(--text); background: var(--bg2); }
+.nav-tab.active { color: var(--text); background: var(--bg3); }
+
+/* LAYOUT */
+main { max-width: 900px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+
+/* HERO IMAGE */
+.hero {
+  width: 100%; aspect-ratio: 16/6;
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  position: relative;
+}
+.hero img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); opacity: 0.7; }
+.hero-caption { font-size: 11px; color: var(--muted); margin-bottom: 2.5rem; }
+
+/* SECTION TITLE */
+.section-title {
+  font-size: 22px; font-weight: 600; letter-spacing: 6px;
+  color: var(--text);
+  padding-bottom: 1rem;
+  border-bottom: 0.5px solid var(--border2);
+  margin-bottom: 1.5rem;
+}
+.section-title .slash { color: var(--muted); margin-right: 0.5rem; }
+
+/* YEAR NAV */
+.year-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem;
+  font-size: 12px;
+}
+.year-nav-prev, .year-nav-next {
+  color: var(--muted2); cursor: pointer; border: none; background: none;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 1px;
+  padding: 4px 8px; transition: color 0.15s;
+}
+.year-nav-prev:hover, .year-nav-next:hover { color: var(--text); }
+.year-nav-prev:disabled, .year-nav-next:disabled { opacity: 0.2; cursor: default; }
+.year-nav-cur { font-size: 14px; font-weight: 500; letter-spacing: 2px; }
+
+/* ADD BUTTON */
+.add-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; letter-spacing: 2px;
+  padding: 6px 14px;
+  border: 0.5px solid var(--border2);
+  color: var(--muted2);
+  background: none; cursor: pointer;
+  font-family: var(--mono);
+  margin-bottom: 1.5rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+.add-btn:hover { color: var(--text); border-color: var(--border2); }
+
+/* FORM */
+.form-wrap {
+  background: var(--bg2);
+  border: 0.5px solid var(--border2);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: none;
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.form-group label { display: block; font-size: 10px; letter-spacing: 2px; color: var(--muted); margin-bottom: 5px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; background: var(--bg3);
+  border: 0.5px solid var(--border2);
+  color: var(--text); font-family: var(--mono); font-size: 12px;
+  padding: 7px 10px; outline: none;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: rgba(255,255,255,0.3);
+}
+.form-group textarea { resize: vertical; min-height: 65px; }
+.form-group select option { background: var(--bg3); }
+.form-search-results {
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  border-top: none; max-height: 200px; overflow-y: auto;
+  display: none;
+}
+.form-search-result {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; cursor: pointer; border-bottom: 0.5px solid var(--border);
+  transition: background 0.1s;
+}
+.form-search-result:hover { background: var(--bg2); }
+.form-search-result img { width: 28px; height: 40px; object-fit: cover; background: var(--bg2); }
+.form-search-result-info { flex: 1; }
+.form-search-result-title { font-size: 12px; font-weight: 500; }
+.form-search-result-year { font-size: 11px; color: var(--muted2); }
+.form-actions { display: flex; gap: 8px; margin-top: 12px; }
+.btn-save {
+  background: var(--text); color: var(--bg);
+  border: none; padding: 7px 18px; font-size: 11px; letter-spacing: 2px;
+  cursor: pointer; font-family: var(--mono); font-weight: 600;
+  transition: opacity 0.15s;
+}
+.btn-save:hover { opacity: 0.85; }
+.btn-cancel {
+  background: none; border: 0.5px solid var(--border2);
+  color: var(--muted2); padding: 7px 18px; font-size: 11px; letter-spacing: 2px;
+  cursor: pointer; font-family: var(--mono);
+}
+.search-status { font-size: 11px; color: var(--muted); margin-top: 4px; min-height: 16px; }
+
+/* ENTRIES */
+.entry {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.entry:last-child { border-bottom: none; }
+.entry-cover {
+  width: 40px; flex-shrink: 0;
+  background: var(--bg2); border: 0.5px solid var(--border);
+}
+.entry-cover img { width: 40px; height: 57px; object-fit: cover; display: block; }
+.entry-cover.no-img { width: 0; }
+.entry-date { font-size: 10px; color: var(--muted); letter-spacing: 1px; min-width: 105px; padding-top: 1px; flex-shrink: 0; }
+.entry-body { flex: 1; }
+.entry-title { font-size: 13px; font-weight: 500; color: var(--text); }
+.entry-title .yr { font-weight: 400; color: var(--muted2); }
+.entry-rating { font-size: 12px; color: var(--text); margin-left: 4px; }
+.entry-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.entry-note {
+  font-size: 12px; color: var(--muted2); margin-top: 6px;
+  font-style: italic;
+  border-left: 1.5px solid var(--border2); padding-left: 10px;
+  font-family: var(--sans); line-height: 1.5;
+}
+.entry-delete {
+  opacity: 0; background: none; border: none; color: var(--muted);
+  cursor: pointer; font-size: 16px; padding: 0 4px; transition: opacity 0.15s;
+  flex-shrink: 0; align-self: center;
+}
+.entry:hover .entry-delete { opacity: 1; }
+
+.empty-state { padding: 3rem 0; text-align: center; color: var(--muted); font-size: 12px; letter-spacing: 2px; }
+
+/* TABS PANEL */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); }
+
+@media (max-width: 600px) {
+  nav { padding: 0 1rem; }
+  main { padding: 2rem 1rem 4rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .entry-date { min-width: 80px; font-size: 9px; }
+  .nav-tab { padding: 0 0.75rem; font-size: 10px; letter-spacing: 1px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">// DIÁRIO_</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPanel('filmes')">FILMES</button>
+    <button class="nav-tab" onclick="showPanel('series')">SÉRIES</button>
+    <button class="nav-tab" onclick="showPanel('livros')">LIVROS</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- FILMES -->
+<div id="panel-filmes" class="panel active">
+  <div class="section-title"><span class="slash">// </span>DIÁRIO DE FILMES_</div>
+  <div class="year-nav">
+    <button class="year-nav-prev" onclick="changeYear('filmes',-1)">← <span id="filmes-prev-label"></span></button>
+    <span class="year-nav-cur" id="filmes-year-label"></span>
+    <button class="year-nav-next" onclick="changeYear('filmes',1)"><span id="filmes-next-label"></span> →</button>
+  </div>
+  <button class="add-btn" onclick="toggleForm('filmes')">+ NOVA ENTRADA</button>
+  <div class="form-wrap" id="form-filmes">
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label>BUSCAR FILME (TMDB)</label>
+        <input type="text" id="filmes-search" placeholder="Digite o título..." oninput="debounceSearch('filmes')">
+        <div class="search-status" id="filmes-search-status"></div>
+        <div class="form-search-results" id="filmes-results"></div>
+      </div>
+      <div class="form-group">
+        <label>TÍTULO</label>
+        <input type="text" id="filmes-title" placeholder="ex: Ponyo">
+      </div>
+      <div class="form-group">
+        <label>ANO</label>
+        <input type="number" id="filmes-year-input" placeholder="2008" min="1900" max="2099">
+      </div>
+      <div class="form-group">
+        <label>NOTA (0–5)</label>
+        <input type="number" id="filmes-rating" min="0" max="5" step="0.5" placeholder="4.5">
+      </div>
+      <div class="form-group">
+        <label>DATA ASSISTIDA</label>
+        <input type="date" id="filmes-date">
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>DETALHES</label>
+        <input type="text" id="filmes-meta" placeholder="ex: visto no cinema, c/ amigos">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>COMENTÁRIO</label>
+      <textarea id="filmes-note" placeholder="O que você achou?"></textarea>
+    </div>
+    <input type="hidden" id="filmes-poster">
+    <div class="form-actions">
+      <button class="btn-save" onclick="saveEntry('filmes')">SALVAR</button>
+      <button class="btn-cancel" onclick="toggleForm('filmes')">CANCELAR</button>
+    </div>
+  </div>
+  <div id="filmes-list"></div>
+</div>
+
+<!-- SERIES -->
+<div id="panel-series" class="panel">
+  <div class="section-title"><span class="slash">// </span>DIÁRIO DE SÉRIES_</div>
+  <div class="year-nav">
+    <button class="year-nav-prev" onclick="changeYear('series',-1)">← <span id="series-prev-label"></span></button>
+    <span class="year-nav-cur" id="series-year-label"></span>
+    <button class="year-nav-next" onclick="changeYear('series',1)"><span id="series-next-label"></span> →</button>
+  </div>
+  <button class="add-btn" onclick="toggleForm('series')">+ NOVA ENTRADA</button>
+  <div class="form-wrap" id="form-series">
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label>BUSCAR SÉRIE (TMDB)</label>
+        <input type="text" id="series-search" placeholder="Digite o título..." oninput="debounceSearch('series')">
+        <div class="search-status" id="series-search-status"></div>
+        <div class="form-search-results" id="series-results"></div>
+      </div>
+      <div class="form-group">
+        <label>TÍTULO</label>
+        <input type="text" id="series-title" placeholder="ex: Loki">
+      </div>
+      <div class="form-group">
+        <label>ANO</label>
+        <input type="number" id="series-year-input" placeholder="2021" min="1900" max="2099">
+      </div>
+      <div class="form-group">
+        <label>NOTA (0–5)</label>
+        <input type="number" id="series-rating" min="0" max="5" step="0.5" placeholder="4">
+      </div>
+      <div class="form-group">
+        <label>DATA ASSISTIDA</label>
+        <input type="date" id="series-date">
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>DETALHES (temporada, episódio...)</label>
+        <input type="text" id="series-meta" placeholder="ex: S01, c/ amigos">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>COMENTÁRIO</label>
+      <textarea id="series-note" placeholder="O que você achou?"></textarea>
+    </div>
+    <input type="hidden" id="series-poster">
+    <div class="form-actions">
+      <button class="btn-save" onclick="saveEntry('series')">SALVAR</button>
+      <button class="btn-cancel" onclick="toggleForm('series')">CANCELAR</button>
+    </div>
+  </div>
+  <div id="series-list"></div>
+</div>
+
+<!-- LIVROS -->
+<div id="panel-livros" class="panel">
+  <div class="section-title"><span class="slash">// </span>DIÁRIO DE LEITURA_</div>
+  <div class="year-nav">
+    <button class="year-nav-prev" onclick="changeYear('livros',-1)">← <span id="livros-prev-label"></span></button>
+    <span class="year-nav-cur" id="livros-year-label"></span>
+    <button class="year-nav-next" onclick="changeYear('livros',1)"><span id="livros-next-label"></span> →</button>
+  </div>
+  <button class="add-btn" onclick="toggleForm('livros')">+ NOVA ENTRADA</button>
+  <div class="form-wrap" id="form-livros">
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label>BUSCAR LIVRO (OPEN LIBRARY)</label>
+        <input type="text" id="livros-search" placeholder="Digite o título..." oninput="debounceSearch('livros')">
+        <div class="search-status" id="livros-search-status"></div>
+        <div class="form-search-results" id="livros-results"></div>
+      </div>
+      <div class="form-group">
+        <label>TÍTULO</label>
+        <input type="text" id="livros-title" placeholder="ex: O Apanhador no Campo de Centeio">
+      </div>
+      <div class="form-group">
+        <label>AUTOR</label>
+        <input type="text" id="livros-author" placeholder="ex: J.D. Salinger">
+      </div>
+      <div class="form-group">
+        <label>ANO DE PUBLICAÇÃO</label>
+        <input type="number" id="livros-year-input" placeholder="1951" min="1900" max="2099">
+      </div>
+      <div class="form-group">
+        <label>NOTA (0–5)</label>
+        <input type="number" id="livros-rating" min="0" max="5" step="0.5" placeholder="4">
+      </div>
+      <div class="form-group">
+        <label>DATA DE LEITURA</label>
+        <input type="date" id="livros-date">
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:8px">
+      <label>COMENTÁRIO</label>
+      <textarea id="livros-note" placeholder="O que você achou?"></textarea>
+    </div>
+    <input type="hidden" id="livros-poster">
+    <div class="form-actions">
+      <button class="btn-save" onclick="saveEntry('livros')">SALVAR</button>
+      <button class="btn-cancel" onclick="toggleForm('livros')">CANCELAR</button>
+    </div>
+  </div>
+  <div id="livros-list"></div>
+</div>
+
+</main>
+
+<script>
+// ── TMDB key (public read-only demo key — replace with your own at themoviedb.org)
+const TMDB_KEY = '2dca580c2a14b55200e784d157207b4d';
+const IMG_BASE = 'https://image.tmdb.org/t/p/w92';
+const OL_COVER = 'https://covers.openlibrary.org/b/id/';
+
+// ── State
+const state = {
+  filmes: { year: new Date().getFullYear(), data: [] },
+  series: { year: new Date().getFullYear(), data: [] },
+  livros: { year: new Date().getFullYear(), data: [] },
+};
+
+function load() {
+  ['filmes','series','livros'].forEach(k => {
+    const raw = localStorage.getItem('diario_' + k);
+    if (raw) state[k].data = JSON.parse(raw);
+  });
+}
+function save(k) {
+  localStorage.setItem('diario_' + k, JSON.stringify(state[k].data));
+}
+
+// ── Panel switching
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  renderYearNav(id);
+  renderList(id);
+}
+
+// ── Year navigation
+function allYears(k) {
+  const years = state[k].data.map(e => new Date(e.date).getFullYear());
+  return [...new Set(years)].sort((a,b) => a-b);
+}
+
+function renderYearNav(k) {
+  const cur = state[k].year;
+  const years = allYears(k);
+  const curIdx = years.indexOf(cur);
+  const prev = years[curIdx - 1];
+  const next = years[curIdx + 1];
+
+  document.getElementById(k + '-year-label').textContent = cur;
+  const prevBtn = document.querySelector('#panel-' + k + ' .year-nav-prev');
+  const nextBtn = document.querySelector('#panel-' + k + ' .year-nav-next');
+  document.getElementById(k + '-prev-label').textContent = prev || '';
+  document.getElementById(k + '-next-label').textContent = next || '';
+  prevBtn.disabled = !prev;
+  nextBtn.disabled = !next;
+}
+
+function changeYear(k, dir) {
+  const years = allYears(k);
+  const curIdx = years.indexOf(state[k].year);
+  const newIdx = curIdx + dir;
+  if (newIdx >= 0 && newIdx < years.length) {
+    state[k].year = years[newIdx];
+    renderYearNav(k);
+    renderList(k);
+  }
+}
+
+// ── Format helpers
+const DAYS = ['DOM','SEG','TER','QUA','QUI','SEX','SAB'];
+function fmtDate(iso) {
+  const d = new Date(iso + 'T12:00:00');
+  return DAYS[d.getDay()] + ' ' + String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear();
+}
+function starsStr(n) {
+  if (!n) return '';
+  const full = Math.floor(n);
+  const half = (n % 1) >= 0.5;
+  return '★'.repeat(full) + (half ? '½' : '') + ' ' + n + ' ★';
+}
+
+// ── Render list
+function renderList(k) {
+  const container = document.getElementById(k + '-list');
+  const year = state[k].year;
+  const entries = state[k].data
+    .filter(e => new Date(e.date + 'T12:00:00').getFullYear() === year)
+    .sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  if (!entries.length) {
+    container.innerHTML = '<div class="empty-state">NENHUMA ENTRADA EM ' + year + '_</div>';
+    return;
+  }
+
+  container.innerHTML = entries.map(e => {
+    const hasCover = !!e.poster;
+    return `<div class="entry">
+      <div class="entry-cover ${hasCover?'':'no-img'}">
+        ${hasCover ? `<img src="${e.poster}" alt="" loading="lazy">` : ''}
+      </div>
+      <div class="entry-date">${fmtDate(e.date)}</div>
+      <div class="entry-body">
+        <div class="entry-title">
+          ${e.title}${e.author ? ' — <span class="yr">' + e.author + '</span>' : ''}
+          ${e.year ? ' <span class="yr">('+e.year+')</span>' : ''}
+          ${e.rating ? '<span class="entry-rating">' + starsStr(e.rating) + '</span>' : ''}
+        </div>
+        ${e.meta ? `<div class="entry-meta">${e.meta}</div>` : ''}
+        ${e.note ? `<div class="entry-note">${e.note}</div>` : ''}
+      </div>
+      <button class="entry-delete" onclick="deleteEntry('${k}','${e.id}')" title="Remover">×</button>
+    </div>`;
+  }).join('');
+}
+
+function deleteEntry(k, id) {
+  if (!confirm('Remover esta entrada?')) return;
+  state[k].data = state[k].data.filter(e => e.id !== id);
+  save(k);
+  // ensure year still valid
+  const years = allYears(k);
+  if (!years.includes(state[k].year) && years.length) state[k].year = years[years.length-1];
+  renderYearNav(k);
+  renderList(k);
+}
+
+// ── Form
+function toggleForm(k) {
+  const f = document.getElementById('form-' + k);
+  f.style.display = f.style.display === 'block' ? 'none' : 'block';
+}
+
+function saveEntry(k) {
+  const title = document.getElementById(k + '-title').value.trim();
+  if (!title) { alert('Adicione um título.'); return; }
+  const dateVal = document.getElementById(k + '-date').value || new Date().toISOString().slice(0,10);
+  const entryYear = parseInt(document.getElementById(k + '-year-input').value) || new Date(dateVal+'T12:00:00').getFullYear();
+
+  const entry = {
+    id: Date.now().toString(),
+    title,
+    year: document.getElementById(k + '-year-input').value || '',
+    rating: parseFloat(document.getElementById(k + '-rating').value) || 0,
+    date: dateVal,
+    meta: document.getElementById(k + '-meta') ? document.getElementById(k + '-meta').value.trim() : '',
+    note: document.getElementById(k + '-note').value.trim(),
+    poster: document.getElementById(k + '-poster').value,
+    author: k === 'livros' ? (document.getElementById('livros-author').value.trim()) : '',
+  };
+
+  state[k].data.push(entry);
+  save(k);
+  state[k].year = new Date(dateVal+'T12:00:00').getFullYear();
+
+  // reset
+  ['title','year-input','rating','date','meta','note','poster','search','author'].forEach(f => {
+    const el = document.getElementById(k + '-' + f);
+    if (el) el.value = '';
+  });
+  document.getElementById(k + '-results').style.display = 'none';
+  document.getElementById(k + '-search-status').textContent = '';
+  toggleForm(k);
+  renderYearNav(k);
+  renderList(k);
+}
+
+// ── Search / autocomplete
+let searchTimers = {};
+
+function debounceSearch(k) {
+  clearTimeout(searchTimers[k]);
+  searchTimers[k] = setTimeout(() => doSearch(k), 500);
+}
+
+async function doSearch(k) {
+  const q = document.getElementById(k + '-search').value.trim();
+  const status = document.getElementById(k + '-search-status');
+  const results = document.getElementById(k + '-results');
+  if (q.length < 2) { results.style.display = 'none'; status.textContent = ''; return; }
+  status.textContent = 'buscando...';
+  results.style.display = 'none';
+
+  try {
+    if (k === 'filmes') {
+      const r = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}&language=pt-BR`);
+      const d = await r.json();
+      showResults(k, (d.results||[]).slice(0,6).map(m => ({
+        title: m.title,
+        year: m.release_date ? m.release_date.slice(0,4) : '',
+        poster: m.poster_path ? IMG_BASE + m.poster_path : '',
+      })));
+    } else if (k === 'series') {
+      const r = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}&language=pt-BR`);
+      const d = await r.json();
+      showResults(k, (d.results||[]).slice(0,6).map(m => ({
+        title: m.name,
+        year: m.first_air_date ? m.first_air_date.slice(0,4) : '',
+        poster: m.poster_path ? IMG_BASE + m.poster_path : '',
+      })));
+    } else {
+      const r = await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(q)}&limit=6&fields=title,author_name,first_publish_year,cover_i`);
+      const d = await r.json();
+      showResults(k, (d.docs||[]).map(b => ({
+        title: b.title,
+        year: b.first_publish_year || '',
+        author: (b.author_name||[])[0] || '',
+        poster: b.cover_i ? OL_COVER + b.cover_i + '-S.jpg' : '',
+        posterLg: b.cover_i ? OL_COVER + b.cover_i + '-M.jpg' : '',
+      })));
+    }
+    status.textContent = '';
+  } catch(e) {
+    status.textContent = 'erro na busca.';
+  }
+}
+
+function showResults(k, items) {
+  const results = document.getElementById(k + '-results');
+  if (!items.length) { results.style.display = 'none'; document.getElementById(k+'-search-status').textContent = 'nenhum resultado.'; return; }
+  results.innerHTML = items.map((item,i) => `
+    <div class="form-search-result" onclick="selectResult('${k}',${i})">
+      ${item.poster ? `<img src="${item.poster}" alt="">` : '<div style="width:28px;height:40px;background:var(--bg)"></div>'}
+      <div class="form-search-result-info">
+        <div class="form-search-result-title">${item.title}</div>
+        <div class="form-search-result-year">${item.author ? item.author + ' · ' : ''}${item.year}</div>
+      </div>
+    </div>
+  `).join('');
+  results.dataset.items = JSON.stringify(items);
+  results.style.display = 'block';
+}
+
+function selectResult(k, idx) {
+  const items = JSON.parse(document.getElementById(k+'-results').dataset.items);
+  const item = items[idx];
+  document.getElementById(k+'-title').value = item.title;
+  document.getElementById(k+'-year-input').value = item.year || '';
+  document.getElementById(k+'-poster').value = item.posterLg || item.poster || '';
+  if (k === 'livros' && item.author) document.getElementById('livros-author').value = item.author;
+  document.getElementById(k+'-results').style.display = 'none';
+  document.getElementById(k+'-search').value = item.title;
+}
+
+// ── Init
+load();
+['filmes','series','livros'].forEach(k => {
+  // set year to most recent with entries, or current year
+  const years = allYears(k);
+  if (years.length) state[k].year = years[years.length-1];
+  renderYearNav(k);
+});
+renderList('filmes');
+
+// Set today as default date
+const today = new Date().toISOString().slice(0,10);
+['filmes','series','livros'].forEach(k => {
+  const el = document.getElementById(k+'-date');
+  if (el) el.value = today;
+});
+</script>
+</body>
+</html>
